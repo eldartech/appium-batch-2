@@ -5,11 +5,14 @@ import android.pages.ViewsPage;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
+import io.appium.java_client.touch.LongPressOptions;
 import io.appium.java_client.touch.TapOptions;
 import io.appium.java_client.touch.offset.ElementOption;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.AndroidCapabilityUtil;
 import utils.AndroidElementUtil;
 
@@ -18,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class GestureTest {
 
@@ -28,14 +32,20 @@ public class GestureTest {
     HomePage homePage;
     TouchAction action;
     ViewsPage viewsPage;
-
+    WebDriverWait wait;
+    ViewsPage.ExpandableList expandableList;
     @Before
     public void setCapabilities() throws MalformedURLException {
         URL appiumServer = new URL(APPIUM);
         driver = new AndroidDriver(appiumServer, AndroidCapabilityUtil.getCapabilities("tech", APP));
+        //implicit wait
+        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+        //explicit wait
+        wait=new WebDriverWait(driver,3);
         homePage = new HomePage(driver);
         viewsPage = new ViewsPage(driver);
         action = new TouchAction(driver);
+        expandableList = new ViewsPage.ExpandableList(driver);
     }
 
     @Test
@@ -45,5 +55,14 @@ public class GestureTest {
                 "Controls", "Custom", "Date Widgets", "Drag and Drop", "Expandable Lists", "Focus", "Gallery",
                 "Game Controller Input", "Grid");
         Assert.assertEquals(expectedList, AndroidElementUtil.getTexts(viewsPage.getViewsOptions()));
+    }
+
+    @Test
+    public void touchActionTest() {
+        action.tap(TapOptions.tapOptions().withElement(ElementOption.element(homePage.getViews()))).perform();
+        action.tap(TapOptions.tapOptions().withElement(ElementOption.element(wait.until(ExpectedConditions.visibilityOf(viewsPage.getExpandableLists()))))).perform();
+        action.tap(TapOptions.tapOptions().withElement(ElementOption.element(wait.until(ExpectedConditions.visibilityOf(expandableList.getCustomAdapter()))))).perform();
+        action.longPress(LongPressOptions.longPressOptions().withElement(ElementOption.element(expandableList.getPeopleNames()))).perform();
+        Assert.assertEquals(Arrays.asList("Sample menu", "Sample action"),AndroidElementUtil.getTexts(expandableList.getPeopleNamesOptions()));
     }
 }
