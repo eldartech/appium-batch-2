@@ -23,6 +23,7 @@ public class HomePage {
     @AndroidFindBy(accessibility = "Accessibility")
     private AndroidElement accessibility;
 
-
+    @AndroidFindBy(uiAutomator = "text(\"Views\")")
+    private AndroidElement views;
 
 }
