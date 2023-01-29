@@ -1,7 +1,7 @@
-package android.tests;
+package android.tests.apiDemos;
 
-import android.pages.HomePage;
-import android.pages.ViewsPage;
+import android.pages.apiDemos.HomePage;
+import android.pages.apiDemos.ViewsPage;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
@@ -16,7 +16,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.AndroidCapabilityUtil;
 import utils.AndroidElementUtil;
 
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
